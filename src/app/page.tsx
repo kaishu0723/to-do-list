@@ -12,8 +12,18 @@ export default function Home() {
   const [newTask,setNewTask]=useState("");
 
   useEffect(()=>{
-    const data=localStorage.getItem("tasks");
-    setTasks(JSON.parse(data));
+    const data = localStorage.getItem("tasks");
+    if (data) {
+      try {
+        const obj = JSON.parse(data) as Task[];
+        setTasks(obj);
+      } catch (error) {
+        console.error("Failed to parse tasks from localStorage:", error);
+        setTasks([]); // デフォルトで空配列を設定
+      }
+    } else {
+      setTasks([]); // デフォルトで空配列を設定
+    }
   },[]);
   useEffect(()=>{
     localStorage.setItem("tasks",JSON.stringify(tasks));
